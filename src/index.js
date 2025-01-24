@@ -18,7 +18,7 @@ create({
 
   Header: {},
 
-  content: {},
+  GridSelection: {},
 
   Footer: { text: 'Footer' }
 }, {

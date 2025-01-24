@@ -1,6 +1,6 @@
 'use strict'
 
-import { Flex, Link } from 'smbls'
+import { Flex, Link, Grid } from 'smbls'
 
 export const Header = {
   extend: Flex,
@@ -52,4 +52,64 @@ export const Footer = {
     padding: 'Z B',
     order: 9
   }
+}
+
+const GridAtom = {
+  props: {
+    width: '26px',
+    height: '26px',
+    background: '#E8F1FF',
+    ":hover": {
+      background: '#3D7BD9',
+      cursor: 'pointer',
+    },
+  },
+  state: { value: 0 },
+  on: {
+    click: (event, element, state) => {
+      state.update({ value: state.value + 1 })
+      console.log(state.value)
+    },
+    mouseover: (event, element, state) => {
+      console.log(element.key)
+    }
+  }
+}
+
+export const GridContainer = {
+  extend: Grid,
+  props: {
+    templateColumns: 'repeat(16, 1fr)',
+    templateRows: 'repeat(8, 1fr)',
+    columnGap: 'A1',
+    rowGap: 'A1',
+    state: { length: 0 },
+  },
+  on: {
+    click: (event, element, state) => {
+      state.update({ length: 16 * 8 })
+      console.log(state.length)
+    },
+    mouseover: (event, element, state) => {
+      console.log(element)
+    },
+  }
+}
+
+export const GridSelection = {
+  extend: GridContainer,
+  props: {
+    templateColumns: 'repeat(16, 1fr)',
+    templateRows: 'repeat(8, 1fr)',
+    columnGap: 'A1',
+    rowGap: 'A1',
+    state: { length: 0 },
+  },
+  on: {
+    mouseover: (event, element, state) => {
+      console.log(element)
+    },  
+  },  
+  childExtend: GridAtom,
+  ...Array.from({ length: 16 * 8 }, () => GridAtom)
 }
