@@ -18,7 +18,7 @@ create({
 
   Header: {},
 
-  GridContainer: {tableX, tableY},
+  GridContainer: {tableX: 8, tableY: 16},
 
 }, {
   designSystem,
