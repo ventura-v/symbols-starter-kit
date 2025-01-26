@@ -1,7 +1,5 @@
 'use strict'
 
-import ICONS from '@symbo.ls/default-icons'
-
 /**
  * Colors
  * @tutorial https://docs.symbols.app/color
@@ -10,7 +8,6 @@ const COLOR = {
   transparent: 'transparent',
   black: 'black',
   white: 'white',
-  orange: '#E98232'
 }
 
 /**
@@ -101,7 +98,6 @@ export default {
   COLOR,
   GRADIENT,
   THEME,
-  ICONS,
   TYPOGRAPHY,
   SPACING,
   FONT,
