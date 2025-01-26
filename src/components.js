@@ -1,115 +1,130 @@
 'use strict'
 
-import { Flex, Link, Grid } from 'smbls'
+import { Flex, Link, Grid, Text } from 'smbls'
 
 export const Header = {
   extend: Flex,
   props: {
     minWidth: '100%',
     padding: 'Z B',
-    align: 'center space-between'
+    align: 'center',
+    color: '#000',
   },
 
   Flex: {
     props: { gap: 'C' },
-    childExtend: {
-      extend: Link,
-      props: ({ props }) => ({
-        textDecoration: window.location.pathname === props.href ? 'underline' : 'none'
-      })
-    },
-    Text_logo: { href: '/', text: 'Hello!' },
-    Text_about: { href: '/about', text: 'About' }
-  },
-
-  ThemeSwitcher: {}
-}
-
-export const ThemeSwitcher = {
-  extend: Flex,
-  props: { gap: 'A2' },
-  childExtend: {
-    props: (element, state) => ({
-      active: state.globalTheme === element.key,
-      cursor: 'pointer',
-      '.active': {
-        fontWeight: '900'
-      }
-    }),
-    on: {
-      click: (event, element, state) => {
-        state.update({ globalTheme: element.key })
-      }
-    }
-  },
-  dark: { text: 'Dark' },
-  light: { text: 'Light' },
-  midnight: { text: 'Midnight' }
-}
-
-export const Footer = {
-  props: {
-    padding: 'Z B',
-    order: 9
   }
 }
 
-const GridAtom = {
+const buildGrid = (x, y, template) => {
+  const grid = Array.from({ length: parseInt(x) * parseInt(y) }, () => ({ ...template}))
+  return grid
+}
+
+export const GridAtom = {
   props: {
+    aspectRatio: '1/1',
     width: '26px',
     height: '26px',
-    background: '#E8F1FF',
-    ":hover": {
-      background: '#3D7BD9',
-      cursor: 'pointer',
+    borderRadius: '2px'
+  },
+}
+
+export const GridSelection = {
+  extend: Grid,
+  props: (element) => ({
+    clickedX: element.state.x,
+    clickedY: element.state.y,
+    templateColumns: `repeat(${element.props.tableY}, 1fr)`,
+    templateRows: `repeat(${element.props.tableX}, 1fr)`,
+    gap: '4px',
+    borderRadius: '6px',
+    overflow: 'hidden',
+    padding: 'Z',
+  }),
+  childExtend: {
+    extend: Grid,
+    props: ({state}) => ({
+      background: (state.x <= state.parent.x & state.y <= state.parent.y & state.parent.isActive) 
+        ? '#3D7BD9' 
+        : '#E8F1FF',
+      ":hover": {
+        background: '#3D7BD9',
+        cursor: 'pointer',
+      },
+    }),
+    state: { x: null, y: null, isActive: false },
+    on: {
+      render: (element, state) => {
+        clickedX = Math.floor(parseInt(element.key) / 16) + 1
+        clickedY = (parseInt(element.key) % 16) + 1
+        state.update({ 
+          x: clickedX, 
+          y: clickedY,
+        })
+      },
+      click: (event, element, state) => {
+        clickedX = Math.floor(parseInt(element.key) / 16) + 1
+        clickedY = (parseInt(element.key) % 16) + 1
+
+        state.root.update({ selectedCell: {clickedX, clickedY} })
+
+        state.parent.x === state.x & state.parent.y === state.y 
+        ? state.parent.update({ 
+          isActive: !state.parent.isActive,
+        })
+        : state.parent.update({ 
+            x: clickedX, 
+            y: clickedY,
+            isActive: true,
+          })
+      },
     },
   },
-  state: { value: 0 },
-  on: {
-    click: (event, element, state) => {
-      state.update({ value: state.value + 1 })
-      console.log(state.value)
-    },
-    mouseover: (event, element, state) => {
-      console.log(element.key)
-    }
+  $setCollection: (param, el, state) => {
+    return buildGrid(param.props.tableX, param.props.tableY, GridAtom)
   }
 }
 
 export const GridContainer = {
-  extend: Grid,
+  extend: Flex,
   props: {
-    templateColumns: 'repeat(16, 1fr)',
-    templateRows: 'repeat(8, 1fr)',
-    columnGap: 'A1',
-    rowGap: 'A1',
-    state: { length: 0 },
+    flow: 'column',
+    padding: 'Z B',
+    align: 'center center',
+    tableX: 0,
+    tableY: 0,
+    background: '#FFF',
+    borderRadius: '16px',
+    padding: '20px',
   },
-  on: {
-    click: (event, element, state) => {
-      state.update({ length: 16 * 8 })
-      console.log(state.length)
-    },
-    mouseover: (event, element, state) => {
-      console.log(element)
-    },
-  }
+  Header: {text: 'Grid Selection'},
+  GridSelection: ({props}) => ({tableX: props.tableX, tableY: props.tableY}),
+  Footer: ({state}) => state,
 }
 
-export const GridSelection = {
-  extend: GridContainer,
+
+export const Footer = {
+  extend: Flex,
   props: {
-    templateColumns: 'repeat(16, 1fr)',
-    templateRows: 'repeat(8, 1fr)',
-    columnGap: 'A1',
-    rowGap: 'A1',
-    state: { length: 0 },
+    padding: 'Z B',
+    order: 9,
+    width: '100%',
+    color: '#000',
   },
-  on: {
-    mouseover: (event, element, state) => {
-      console.log(element)
-    },  
-  },  
-  childExtend: GridAtom,
-  ...Array.from({ length: 16 * 8 }, () => GridAtom)
+  childExtend: {
+    Flex,
+    props: {
+      align: 'center space-between',
+    },
+  },
+  Text_coords: ({state}) => 
+    state.selectedCell 
+      ? `Total cells selected: ${state.selectedCell.clickedY}, ${state.selectedCell.clickedX}`
+      : 'No cell selected',
+  
+  Text_total: ({state}) => 
+    state.selectedCell 
+      ? `Total cells selected: ${state.selectedCell.clickedY * state.selectedCell.clickedX}`
+      : 'No cell selected',
 }
