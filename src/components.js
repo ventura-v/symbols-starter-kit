@@ -59,6 +59,7 @@ export const GridSelection = {
     borderRadius: '6px',
     overflow: 'hidden',
     padding: 'Z',
+    background: '#F9F9F9',
   }),
   childExtend: {
     extend: Grid,
@@ -74,16 +75,16 @@ export const GridSelection = {
     state: { x: null, y: null, isActive: false },
     on: {
       render: (element, state) => {
-        clickedX = Math.floor(parseInt(element.key) / 16) + 1
-        clickedY = (parseInt(element.key) % 16) + 1
+        clickedX = Math.floor(parseInt(element.key) / (element.parent.parent.props.tableY)) + 1
+        clickedY = (parseInt(element.key) % (element.parent.parent.props.tableY)) + 1
         state.update({ 
           x: clickedX, 
           y: clickedY,
         })
       },
       click: (event, element, state) => {
-        clickedX = Math.floor(parseInt(element.key) / 16) + 1
-        clickedY = (parseInt(element.key) % 16) + 1
+        clickedX = Math.floor(parseInt(element.key) / (element.parent.parent.props.tableY)) + 1
+        clickedY = (parseInt(element.key) % (element.parent.parent.props.tableY)) + 1
 
         changeFooter(clickedX, clickedY)
 
@@ -112,7 +113,7 @@ export const GridContainer = {
     align: 'center center',
     tableX: 0,
     tableY: 0,
-    background: '#FFF',
+    background: 'white',
     borderRadius: '16px',
     padding: '20px',
   },
@@ -123,13 +124,13 @@ export const GridContainer = {
 
 export const Footer = {
   extend: Flex,
-  props: (element, state) => ({
+  props: {
     padding: 'Z B',
     order: 9,
     width: '100%',
-    color: '#000',
+    color: 'black',
     align: 'center space-between',
-  }),
+  },
   childExtend: {
     props: {
       fontSize: '12px',
