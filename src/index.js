@@ -6,9 +6,6 @@ import designSystem from './designSystem'
 import * as components from './components'
 import pages from './pages'
 
-const x = 8
-const y = 16
-
 create({
   extend: Flex,
 
@@ -21,7 +18,7 @@ create({
 
   Header: {},
 
-  GridContainer: {tableX: x, tableY: y},
+  GridContainer: {tableX, tableY},
 
 }, {
   designSystem,
