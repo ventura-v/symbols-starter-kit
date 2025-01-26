@@ -1,6 +1,27 @@
 'use strict'
 
-import { Flex, Link, Grid, Text } from 'smbls'
+import { Flex, Grid } from 'smbls'
+
+const buildGrid = (x, y, template) => {
+  const grid = Array.from({ length: parseInt(x) * parseInt(y) }, () => ({ ...template}))
+  return grid
+}
+
+const changeFooter = (clickedX, clickedY) => {
+  const footer = document.getElementsByTagName('footer')[0]
+  const changeGrid = footer.childNodes
+
+  changeGrid.forEach((element) => {
+    
+    if (element.getAttribute('key') === 'Text_coords') {
+      element.innerText = `Total cells selected: ${clickedY}, ${clickedX}`
+    }
+
+    if (element.getAttribute('key') === 'Text_total') {
+      element.innerText = `Total cells selected: ${clickedY * clickedX}`
+    }
+  })
+}
 
 export const Header = {
   extend: Flex,
@@ -18,11 +39,6 @@ export const Header = {
   }
 }
 
-const buildGrid = (x, y, template) => {
-  const grid = Array.from({ length: parseInt(x) * parseInt(y) }, () => ({ ...template}))
-  return grid
-}
-
 export const GridAtom = {
   props: {
     aspectRatio: '1/1',
@@ -30,22 +46,6 @@ export const GridAtom = {
     height: '26px',
     borderRadius: '2px'
   },
-}
-
-const changeFooter = (clickedX, clickedY) => {
-  const footer = document.getElementsByTagName('footer')[0]
-  const changeGrid = footer.childNodes
-
-  changeGrid.forEach((element) => {
-    
-    if (element.getAttribute('key') === 'Text_coords') {
-      element.innerText = `Total cells selected: ${clickedY}, ${clickedX}`
-    }
-
-    if (element.getAttribute('key') === 'Text_total') {
-      element.innerText = `Total cells selected: ${clickedY * clickedX}`
-    }
-  })
 }
 
 export const GridSelection = {

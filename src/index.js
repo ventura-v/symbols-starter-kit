@@ -4,7 +4,6 @@ import { create, Flex } from 'smbls'
 
 import designSystem from './designSystem'
 import * as components from './components'
-// import * as components from './components copy 2'
 import pages from './pages'
 
 const x = 8
@@ -22,20 +21,10 @@ create({
 
   Header: {},
 
-  // GridSelection: { x, y },
   GridContainer: {tableX: x, tableY: y},
 
-  // IconsList: {}
-  // Footer: {  }
 }, {
   designSystem,
   components,
   pages
 })
-
-/*
-background: state.selectedCells.includes(element.key) 
-      ? '#FF5733' 
-      : '#E8F1FF',
-  })
-*/
