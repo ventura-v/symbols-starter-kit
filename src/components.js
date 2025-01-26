@@ -30,6 +30,22 @@ export const GridAtom = {
   },
 }
 
+const changeFooter = (clickedX, clickedY) => {
+  const footer = document.getElementsByTagName('footer')[0]
+  const changeGrid = footer.childNodes
+
+  changeGrid.forEach((element) => {
+    
+    if (element.getAttribute('key') === 'Text_coords') {
+      element.innerText = `Total cells selected: ${clickedY}, ${clickedX}`
+    }
+
+    if (element.getAttribute('key') === 'Text_total') {
+      element.innerText = `Total cells selected: ${clickedY * clickedX}`
+    }
+  })
+}
+
 export const GridSelection = {
   extend: Grid,
   props: (element) => ({
@@ -67,7 +83,7 @@ export const GridSelection = {
         clickedX = Math.floor(parseInt(element.key) / 16) + 1
         clickedY = (parseInt(element.key) % 16) + 1
 
-        state.root.update({ selectedCell: {clickedX, clickedY} })
+        changeFooter(clickedX, clickedY)
 
         state.parent.x === state.x & state.parent.y === state.y 
         ? state.parent.update({ 
@@ -100,31 +116,18 @@ export const GridContainer = {
   },
   Header: {text: 'Grid Selection'},
   GridSelection: ({props}) => ({tableX: props.tableX, tableY: props.tableY}),
-  Footer: ({state}) => state,
+  Footer: ({state}) => ({selectedCell: state.selectedCell}),
 }
-
 
 export const Footer = {
   extend: Flex,
-  props: {
+  props: (element, state) => ({
     padding: 'Z B',
     order: 9,
     width: '100%',
     color: '#000',
-  },
-  childExtend: {
-    Flex,
-    props: {
-      align: 'center space-between',
-    },
-  },
-  Text_coords: ({state}) => 
-    state.selectedCell 
-      ? `Total cells selected: ${state.selectedCell.clickedY}, ${state.selectedCell.clickedX}`
-      : 'No cell selected',
-  
-  Text_total: ({state}) => 
-    state.selectedCell 
-      ? `Total cells selected: ${state.selectedCell.clickedY * state.selectedCell.clickedX}`
-      : 'No cell selected',
+    align: 'center space-between',
+  }),
+  Text_coords: {text: 'No cell selected'},
+  Text_total: {text: 'No cell selected'},
 }
