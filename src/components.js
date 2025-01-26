@@ -9,6 +9,8 @@ export const Header = {
     padding: 'Z B',
     align: 'center',
     color: '#000',
+    fontSize: '16px',
+    fontWeight: 'bold',
   },
 
   Flex: {
@@ -128,6 +130,11 @@ export const Footer = {
     color: '#000',
     align: 'center space-between',
   }),
-  Text_coords: {text: 'No cell selected'},
-  Text_total: {text: 'No cell selected'},
+  childExtend: {
+    props: {
+      fontSize: '12px',
+    }
+  },
+  Text_coords: {text: 'Selection coordinates:'},
+  Text_total: {text: 'Total cells selected:'},
 }
